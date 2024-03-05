@@ -1,0 +1,89 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 2.4.0-dcea1e13ff76
+Exec   : gmshToFoam cylinder.m0.5.msh
+Date   : May 13 2022
+Time   : 18:26:21
+Host   : "login01"
+PID    : 44885
+Case   : /gpfs/home/nkumar001/OpenFOAM/nkumar001-2.4.0/addons/rom4wt-main/POD/test/example.laminarVortexShedding
+nProcs : 1
+sigFpe : Floating point exception trapping - not supported on this platform
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+--> FOAM Warning : 
+    From function IOstream::formatEnum(const word&)
+    in file db/IOstreams/IOstreams/IOstream.C at line 51
+    bad format specifier 'compressed', using 'ascii'
+Starting to read mesh format at line 2
+Read format version 2.2  ascii 0
+
+Starting to read physical names at line 5
+Physical names:7
+    Surface 1	inlet
+    Surface 2	outlet
+    Surface 3	top
+    Surface 4	bottom
+    Surface 5	frontAndBack
+    Surface 6	cylinderWalls
+    Volume 7	internal
+
+Starting to read points at line 15
+Vertices to be read:12532
+Vertices read:12532
+
+Starting to read cells at line 12550
+Cells to be read:18636
+
+Mapping region 5 to Foam patch 0
+Mapping region 4 to Foam patch 1
+Mapping region 6 to Foam patch 2
+Mapping region 3 to Foam patch 3
+Mapping region 1 to Foam patch 4
+Mapping region 2 to Foam patch 5
+Mapping region 7 to Foam cellZone 0
+Cells:
+    total:6104
+    hex  :6104
+    prism:0
+    pyr  :0
+    tet  :0
+
+CellZones:
+Zone	Size
+    0	6104
+
+Skipping tag  at line 31189
+Patch 0 gets name frontAndBack
+Patch 1 gets name bottom
+Patch 2 gets name cylinderWalls
+Patch 3 gets name top
+Patch 4 gets name inlet
+Patch 5 gets name outlet
+
+--> FOAM Warning : 
+    From function polyMesh::polyMesh(... construct from shapes...)
+    in file meshes/polyMesh/polyMeshFromShapeMesh.C at line 627
+    Found 12532 undefined faces in mesh; adding to default patch.
+Finding faces of patch 0
+Finding faces of patch 1
+Finding faces of patch 2
+Finding faces of patch 3
+Finding faces of patch 4
+Finding faces of patch 5
+
+FaceZones:
+Zone	Size
+
+Writing zone 0 to cellZone internal and cellSet
+End
+

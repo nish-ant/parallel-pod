@@ -1,0 +1,2 @@
+/gpfs/home/nkumar001/centos_7/easybuild/software/Compiler/GCCcore/5.4.0/binutils/2.26/bin/ar qc libUTILS.a  CMakeFiles/UTILS.dir/src/utils.cpp.o
+/gpfs/home/nkumar001/centos_7/easybuild/software/Compiler/GCCcore/5.4.0/binutils/2.26/bin/ranlib libUTILS.a

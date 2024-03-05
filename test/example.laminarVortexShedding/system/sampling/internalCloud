@@ -1,0 +1,29 @@
+    internalField
+    {
+      type                 sets;
+      functionObjectLibs   ("libsampling.so");
+      enabled              true;
+      interpolationScheme  cellPoint;
+      setFormat            raw;
+      outputControl        adjustableTime;
+      writeInterval        0.1;
+
+      // Sample in the periodic vortex shedding regime
+      timeStart       149.995;
+      timeEnd         170;
+
+      // fields ( p U );
+      fields ( U );
+      
+      sets
+      (
+         cloud
+         {
+            type         cloud;
+            axis         xyz;
+            points       (
+                #include "pointCloud.dat"
+                );
+         }
+      );
+    } 

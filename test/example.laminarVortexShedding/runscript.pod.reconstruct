@@ -1,0 +1,99 @@
+#!/bin/bash
+#----------------------------------------------------------------------------
+#- POD reconstruction of laminar vortex shedding across a 2D cylinder at Re=100
+#- Created by  : Nishant Kumar
+#- Date        : 11/05/2022
+#----------------------------------------------------------------------------
+#SBATCH --job-name=laminarVortexShedding
+#SBATCH --output=log.pod.reconstruct
+#
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=32 
+#SBATCH --time=0-00:30:00
+#SBATCH --partition=imb-resources
+#SBATCH --ear=off
+#SBATCH --mem=93G
+
+echo "#############################"
+echo "User:" $USER
+echo "Date:" `date`
+echo "Host:" `hostname`
+echo "Directory:" `pwd`
+echo "SLURM_JOBID:" $SLURM_JOBID
+echo "SLURM_SUBMIT_DIR:" $SLURM_SUBMIT_DIR
+echo "SLURM_JOB_NODELIST:" $SLURM_JOB_NODELIST
+echo "#############################"
+
+#- Ensure only owner can read the output
+umask 0077
+
+export SLURM_COMP_VERBOSE=3
+export SLURM_LOADER_VERBOSE=3
+
+source /gpfs/home/nkumar001/.bash_profile
+
+#- Activate conda environment
+# conda activate sowfa
+pythonPath="/gpfs/home/nkumar001/anaconda3/envs/sowfa/bin/python"
+
+#- Number of cores to perform POD
+nProcs=8
+#- Mesh size identifier
+ms="m0.5"
+#- Dimension of variable
+varSize=3
+
+#- Number of modes to read (i.e. number of modes to use in reconstruction)
+nModes=10
+
+#- Path to POD executable
+cppbin="/gpfs/home/nkumar001/rom4wt/POD/cmake-build-release/bin/REC"
+
+#- Snapshots directory
+parentDIR=$(pwd)
+snapsDir="${parentDIR}/postProcessing/internalField/"
+
+#- Generate list of time steps used for POD
+timeList="${parentDIR}/system/pod/snapshotTimes"
+nTime=$(wc -l < "$timeList")
+
+#- Spatial coordinates in the POD domain
+coordList="${parentDIR}/system/sampling/pointCloud"
+if [ -f "${coordList}.xy" ]; then
+    coordList=${coordList}.xy
+else
+    coordList=${coordList}.dat
+fi
+nPts=$(wc -l < "$coordList")
+
+#- Initialize output directories
+podDir="${parentDIR}/pod.${ms}.c${nProcs}"
+recDir="${podDir}/reconstruct/"
+mkdir -p $recDir
+chronosDir=${podDir}/chronos/
+modeDir=${podDir}/mode/
+
+if [ -e "$cppbin" ]; then
+    echo "Running reconstruction..."
+    time $cppbin -v $varSize \
+        -np $nProcs \
+        -i $snapsDir \
+        -r $recDir \
+        -m $modeDir \
+        -tf $timeList \
+        -pcfn cloud_U.xy
+
+    echo "Converting original fields and reconstructions to VTK..."
+    $pythonPath ${parentDIR}/plot/cloudReconstructToVTK.py $timeList $coordList $snapsDir $recDir > log.reconstructToVTK 2>&1
+
+    echo "Running script to calculate normalized RMSE..."
+    $pythonPath ${parentDIR}/plot/cloudReconstructError.py $timeList $coordList $snapsDir $recDir > log.reconstructError 2>&1
+
+    echo "DONE!"
+    exit 0
+else
+    echo "$cppbin not found. Please compile and install."
+    exit 1
+fi
+
+# ----------------------------------------------------------------- end-of-file

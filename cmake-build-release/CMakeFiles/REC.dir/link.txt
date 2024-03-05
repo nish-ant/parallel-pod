@@ -1,0 +1,1 @@
+/gpfs/home/nkumar001/centos_7/easybuild/software/Core/GCCcore/5.4.0/bin/c++   -fopenmp -std=c++1z -O3  -rdynamic CMakeFiles/REC.dir/src/rec.cpp.o  -o bin/REC libUTILS.a 
